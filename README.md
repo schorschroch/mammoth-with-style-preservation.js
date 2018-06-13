@@ -42,11 +42,14 @@ mammoth.convertToHtml({arrayBuffer: arrayBuffer}, {stylePreservations: 'all'})
 
 The important thing to note here is the `stylePreservations` key. Currently the supported values are:
 
-* (string) `all` preserve as much style as possible
-* (string) `default` preserve the standard set of styles (currently the same as _all_)
+* (string) `all` configuration for as many as possible style preservations
+* (string) `default` configuration for the most likely desired style preservations (this can be seen in [`lib/styles/preserver-utils.js`](./lib/styles/preserver-utils.js) file)
 * (object) with any of the following supported properties:
   * `useColorSpans`: `true`|`false` - preserves the color of text by wrapping the text in a span element with inline styling
   * `useFontSizeSpans`: `true`|`false` - preserves the font-size of text by wrapping the text in a span element with inline styling
+  * `useStrictFontSize`: `true`|`false`
+    * Text size is stored in docx xml at 2x it's value (ex: if set to size 16 in word, xml holds 32)
+    * When this is set to true, the xml value is halved so size 16 in word --> `font-size: 16px`;
 
 ---
 ---
