@@ -1,3 +1,41 @@
+
+
+# Mammoth (with style preservation) .docx to HTML converter
+
+**ABOUT THIS FORK**
+
+Mammoth is concerned with generating well structured `html`.
+`html` that will work beautifully on the web.
+This is a noble goal to say the least.
+Unfortunately users don't always care about good `html`. In fact they rarely do.
+
+Users just want to use word and then have it magically appear on the "magical intrawebnet thing",
+and never have any issues. _It looked right in Word, why doesn't it look right here?_
+Often, attempting to inform users of the differences between a static width word processor and the  wilds of responsive web development falls on deaf ears. Deaf angry ears.
+
+Typically we want to steer users towards better web practices, but sometimes the text just needs to be red, or the border needs to be dashed. Sometimes our users _use_ so they don't have to understand web practices better. This fork attempts to bring a greater "feel" of style preservation between `docx` and `html`.
+
+The overarching goal is to find ways to do so in robust, repeatable, and html-proper ways. However, until that path appears, this fork will mainly be focused on keeping the red thing red. But doing so in a way that will involve minimal difficulty keep this repo merged and up to date with the main branch. This fork is not looking to reinvent the wheel, just make it red (or blue or whatever).
+
+## TODOS
+
+General Text
+* [ ] text color
+* [ ] font size
+
+Tables
+* [ ] border width
+* [ ] border color
+* [ ] cell background color
+
+## Additional Capabilities of (with style preservation)
+
+TODO
+
+---
+
+**STANDARD REPO DOCS BELOW**
+
 # Mammoth .docx to HTML converter
 
 Mammoth is designed to convert .docx documents,
@@ -21,11 +59,11 @@ The following features are currently supported:
 
 * Customisable mapping from your own docx styles to HTML.
   For instance, you could convert `WarningHeading` to `h1.warning` by providing an appropriate style mapping.
-  
+
 * Tables.
   The formatting of the table itself, such as borders, is currently ignored,
   but the formatting of the text is treated the same as in the rest of the document.
-  
+
 * Footnotes and endnotes.
 
 * Images.
@@ -65,7 +103,7 @@ The easiest way to try out mammoth is to use the web demo:
 
 * [.NET](https://github.com/mwilliamson/dotnet-mammoth).
   Available [on NuGet](https://www.nuget.org/packages/Mammoth/).
-    
+
 ## Usage
 
 ### CLI
@@ -98,7 +136,7 @@ A custom style map can be read from a file using `--style-map`.
 For instance:
 
     mammoth document.docx output.html --style-map=custom-style-map
-    
+
 Where `custom-style-map` looks something like:
 
     p[style-name='Aside Heading'] => div.aside > h2:fresh
@@ -326,17 +364,17 @@ Converts the source document to HTML.
 
 * `input`: an object describing the source document.
   On node.js, the following inputs are supported:
-  
+
     * `{path: path}`, where `path` is the path to the .docx file.
     * `{buffer: buffer}`, where `buffer` is a node.js Buffer containing a .docx file.
-    
+
   In the browser, the following inputs are supported:
-  
+
     * `{arrayBuffer: arrayBuffer}`, where `arrayBuffer` is an array buffer containing a .docx file.
-  
+
 * `options` (optional): options for the conversion.
   May have the following properties:
-  
+
   * `styleMap`: controls the mapping of Word styles to HTML.
      If `options.styleMap` is a string,
      each line is treated as a separate style mapping,
@@ -354,18 +392,18 @@ Converts the source document to HTML.
      the style map passed in `styleMap` is combined with the default style map.
      To stop using the default style map altogether,
      set `options.includeDefaultStyleMap` to `false`.
-    
+
   * `convertImage`: by default, images are converted to `<img>` elements with the source included inline in the `src` attribute.
     Set this option to an [image converter](#image-converters) to override the default behaviour.
-    
+
   * `ignoreEmptyParagraphs`: by default, empty paragraphs are ignored.
     Set this option to `false` to preserve empty paragraphs in the output.
-    
+
   * `idPrefix`:
     a string to prepend to any generated IDs,
     such as those used by bookmarks, footnotes and endnotes.
     Defaults to an empty string.
-  
+
   * `transformDocument`: if set,
     this function is applied to the document read from the docx file before the conversion to HTML.
     The API for document transforms should be considered unstable.
@@ -392,12 +430,12 @@ Each paragraph is followed by two newlines.
 
 * `input`: an object describing the source document.
   On node.js, the following inputs are supported:
-  
+
     * `{path: path}`, where `path` is the path to the .docx file.
     * `{buffer: buffer}`, where `buffer` is a node.js Buffer containing a .docx file.
-    
+
   In the browser, the following inputs are supported:
-  
+
     * `{arrayBuffer: arrayBuffer}`, where `arrayBuffer` is an array buffer containing a .docx file.
 
 * Returns a promise containing a result.
@@ -416,12 +454,12 @@ it will use the embedded style map.
 
 * `input`: an object describing the source document.
   On node.js, the following inputs are supported:
-  
+
     * `{path: path}`, where `path` is the path to the .docx file.
     * `{buffer: buffer}`, where `buffer` is a node.js Buffer containing a .docx file.
-    
+
   In the browser, the following inputs are supported:
-  
+
     * `{arrayBuffer: arrayBuffer}`, where `arrayBuffer` is an array buffer containing a .docx file.
 
 * `styleMap`: the style map to embed.
@@ -459,7 +497,7 @@ and has the following properties:
 
 * `read([encoding])`: read the image file with the specified encoding.
   If no encoding is specified, a `Buffer` is returned.
-  
+
 * `contentType`: the content type of the image, such as `image/png`.
 
 `func` should return an object (or a promise of an object) of attributes for the `<img>` element.
@@ -501,11 +539,11 @@ function transformElement(element) {
         var children = _.map(element.children, transformElement);
         element = {...element, children: children};
     }
-    
+
     if (element.type === "paragraph") {
         element = transformParagraph(element);
     }
-    
+
     return element;
 }
 
@@ -851,12 +889,12 @@ Thanks to the following people for their contributions to Mammoth:
 * [Craig Leinoff](https://github.com/Offlein):
 
   * Document transforms
-    
+
 * [John McLear](https://github.com/JohnMcLear):
 
   * Underline support
 
-* [Chris Price](https://github.com/studiochris): 
+* [Chris Price](https://github.com/studiochris):
 
   * node.js `Buffer` support
   * UTF8 BOM handling

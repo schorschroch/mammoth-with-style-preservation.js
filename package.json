@@ -1,8 +1,9 @@
 {
   "name": "mammoth",
   "version": "1.4.6",
-  "author": "Michael Williamson <mike@zwobble.org>",
-  "description": "Convert Word documents from docx to simple HTML and Markdown",
+  "author": "matt@piratematt.com",
+  "mammoth.js author": "Michael Williamson <mike@zwobble.org>",
+  "description": "Convert Word documents from docx to simple HTML and Markdown. A fork of mammoth.js with some additional opinions about style preservation.",
   "keywords": [
     "docx",
     "html",
@@ -14,7 +15,7 @@
   "main": "./lib/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mwilliamson/mammoth.js.git"
+    "url": "https://github.com/pirate-matt/mammoth-with-style-preservation.js"
   },
   "dependencies": {
     "bluebird": "~3.4.0",
