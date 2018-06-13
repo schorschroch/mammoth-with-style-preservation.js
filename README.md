@@ -20,8 +20,8 @@ The overarching goal is to find ways to do so in robust, repeatable, and html-pr
 ## TODOS
 
 General Text
-* [ ] text color
-* [ ] font size
+* [x] text color
+* [x] font size
 
 Tables
 * [ ] border width

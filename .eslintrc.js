@@ -1,4 +1,4 @@
-{
+module.exports = {
   "extends": "eslint:recommended",
 
   "rules": {
@@ -30,7 +30,7 @@
     "no-unused-vars": ["error", {"args": "none"}],
     "object-curly-spacing": ["error", "never"],
     "radix": ["error", "always"],
-    
+
     "array-bracket-spacing": ["error", "never"],
     "brace-style": ["error", "1tbs"],
     "camelcase": ["error"],
@@ -71,4 +71,4 @@
     "module": true,
     "require": false
   }
-}
+};
