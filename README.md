@@ -22,6 +22,7 @@ The overarching goal is to find ways to do so in robust, repeatable, and html-pr
 General Text
 * [x] text color
 * [x] font size
+* [ ] replace span wrapping with CSS classes or some other more html friendly mechanism
 
 Tables
 * [ ] border width
@@ -30,8 +31,24 @@ Tables
 
 ## Additional Capabilities of (with style preservation)
 
-TODO
+In order to maintain maximum flexibility, each addition of a style preservation is only applied if indicated so in the options payload.
 
+Example:
+```
+mammoth.convertToHtml({arrayBuffer: arrayBuffer}, {stylePreservations: 'all'})
+    .then(displayResult)
+    .done();
+```
+
+The important thing to note here is the `stylePreservations` key. Currently the supported values are:
+
+* (string) `all` preserve as much style as possible
+* (string) `default` preserve the standard set of styles (currently the same as _all_)
+* (object) with any of the following supported properties:
+  * `useColorSpans`: `true`|`false` - preserves the color of text by wrapping the text in a span element with inline styling
+  * `useFontSizeSpans`: `true`|`false` - preserves the font-size of text by wrapping the text in a span element with inline styling
+
+---
 ---
 
 **STANDARD REPO DOCS BELOW**
