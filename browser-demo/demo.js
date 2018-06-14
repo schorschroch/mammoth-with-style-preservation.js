@@ -1,3 +1,5 @@
+/* global document, mammoth, FileReader */
+
 (function() {
     document.getElementById("document")
         .addEventListener("change", handleFileSelect, false);

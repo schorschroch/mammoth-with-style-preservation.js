@@ -660,6 +660,104 @@ test("table has style ID and name read from table properties if present", functi
     assert.deepEqual(table.styleName, "Normal Table");
 });
 
+// testing preserved table style captures
+
+test('table has preserved border styles read from table properties', function() {
+    var expected = {
+        borderStyle: 'single',
+        borderWidth: '8',
+        borderColor: '424242'
+    };
+
+    var topBorderXml = new XmlElement('w:top', {'w:sz': expected.borderWidth, 'w:val': expected.borderStyle, 'w:color': expected.borderColor}, []);
+    var leftBorderXml = new XmlElement('w:left', {'w:sz': expected.borderWidth, 'w:val': expected.borderStyle, 'w:color': expected.borderColor}, []);
+    var bottomBorderXml = new XmlElement('w:bottom', {'w:sz': expected.borderWidth, 'w:val': expected.borderStyle, 'w:color': expected.borderColor}, []);
+    var rightBorderXml = new XmlElement('w:right', {'w:sz': expected.borderWidth, 'w:val': expected.borderStyle, 'w:color': expected.borderColor}, []);
+    var bordersXml = new XmlElement('w:tblBorders', {}, [topBorderXml, leftBorderXml, bottomBorderXml, rightBorderXml]);
+
+    var styleXml = new XmlElement('w:tblStyle', {'w:val': 'TableNormal'}, []);
+    var propertiesXml = new XmlElement('w:tblPr', {}, [styleXml, bordersXml]);
+    var tableXml = new XmlElement('w:tbl', {}, [propertiesXml]);
+
+    var styles = new Styles({}, {}, {'TableNormal': {name: 'Normal Table'}});
+
+    var table = readXmlElementValue(tableXml, {styles: styles});
+
+    _.each(['borderTop', 'borderLeft', 'borderBottom', 'borderRight'], function(preservedStyleKey) {
+        assert.deepEqual(table.preservedStyles[preservedStyleKey].width, expected.borderWidth);
+        assert.deepEqual(table.preservedStyles[preservedStyleKey].style, expected.borderStyle);
+        assert.deepEqual(table.preservedStyles[preservedStyleKey].color, expected.borderColor);
+    });
+});
+
+test('table cell has preserved styles read from properties (border & margin, but no fill)', function() {
+    var expected = {
+        borderStyle: 'dashed',
+        borderWidth: '24',
+        borderColor: '424242',
+        verticalMarginWs: '100.0',
+        horizontalMarginWs: '200.0'
+    };
+
+    var topBorderXml = new XmlElement('w:top', {'w:sz': expected.borderWidth, 'w:val': expected.borderStyle, 'w:color': expected.borderColor}, []);
+    var leftBorderXml = new XmlElement('w:left', {'w:sz': expected.borderWidth, 'w:val': expected.borderStyle, 'w:color': expected.borderColor}, []);
+    var bottomBorderXml = new XmlElement('w:bottom', {'w:sz': expected.borderWidth, 'w:val': expected.borderStyle, 'w:color': expected.borderColor}, []);
+    var rightBorderXml = new XmlElement('w:right', {'w:sz': expected.borderWidth, 'w:val': expected.borderStyle, 'w:color': expected.borderColor}, []);
+    var bordersXml = new XmlElement('w:tcBorders', {}, [topBorderXml, leftBorderXml, bottomBorderXml, rightBorderXml]);
+
+    var topMarginXml = new XmlElement('w:top', {'w:w': expected.verticalMarginWs}, []);
+    var leftMarginXml = new XmlElement('w:left', {'w:w': expected.horizontalMarginWs}, []);
+    var bottomMarginXml = new XmlElement('w:bottom', {'w:w': expected.verticalMarginWs}, []);
+    var rightMarginXml = new XmlElement('w:right', {'w:w': expected.horizontalMarginWs}, []);
+    var marginsXml = new XmlElement('w:tcMar', {}, [topMarginXml, leftMarginXml, bottomMarginXml, rightMarginXml]);
+
+    var fillXml = new XmlElement('w:shd', {'w:fill': 'auto', 'w:val': 'clear'}, []);
+
+    var propertiesXml = new XmlElement('w:tcPr', {}, [bordersXml, marginsXml, fillXml]);
+    var textXml = new XmlElement("w:p", {}, []);
+
+    var cellXml = new XmlElement('w:tc', {}, [propertiesXml, textXml]);
+
+    var cell = readXmlElementValue(cellXml, {});
+
+    _.each(['borderTop', 'borderLeft', 'borderBottom', 'borderRight'], function(preservedStyleKey) {
+        assert.deepEqual(cell.preservedStyles[preservedStyleKey].width, expected.borderWidth);
+        assert.deepEqual(cell.preservedStyles[preservedStyleKey].style, expected.borderStyle);
+        assert.deepEqual(cell.preservedStyles[preservedStyleKey].color, expected.borderColor);
+    });
+
+    assert.deepEqual(cell.preservedStyles.cellMarginTop, expected.verticalMarginWs);
+    assert.deepEqual(cell.preservedStyles.cellMarginLeft, expected.horizontalMarginWs);
+    assert.deepEqual(cell.preservedStyles.cellMarginBottom, expected.verticalMarginWs);
+    assert.deepEqual(cell.preservedStyles.cellMarginRight, expected.horizontalMarginWs);
+
+    assert.deepEqual(cell.preservedStyles.fill, null);  // 'auto' --> null
+});
+
+test('table cell has preserved styles read from properties (fill, but no border or margin)', function() {
+    var expected = {
+        fillColor: '3d85c6'
+    };
+
+    var fillXml = new XmlElement('w:shd', {'w:fill': expected.fillColor, 'w:val': 'clear'}, []);
+
+    var propertiesXml = new XmlElement('w:tcPr', {}, [fillXml]);
+    var textXml = new XmlElement("w:p", {}, []);
+
+    var cellXml = new XmlElement('w:tc', {}, [propertiesXml, textXml]);
+
+    var cell = readXmlElementValue(cellXml, {});
+
+    _.each([
+        'borderTop', 'borderLeft', 'borderBottom', 'borderRight',
+        'cellMarginTop', 'cellMarginLeft', 'cellMarginBottom', 'cellMarginRight'
+    ], function(preservedStyleKey) {
+        assert.deepEqual(cell.preservedStyles[preservedStyleKey], null);
+    });
+
+    assert.deepEqual(cell.preservedStyles.fill, expected.fillColor);
+});
+
 test("warning is emitted when table style cannot be found", function() {
     var styleXml = new XmlElement("w:tblStyle", {"w:val": "TableNormal"}, []);
     var propertiesXml = new XmlElement("w:tblPr", {}, [styleXml]);

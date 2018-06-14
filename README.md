@@ -25,9 +25,10 @@ General Text
 * [ ] replace span wrapping with CSS classes or some other more html friendly mechanism
 
 Tables
-* [ ] border width
-* [ ] border color
-* [ ] cell background color
+* [x] border width
+* [x] border color
+* [x] cell background color
+* [x] cell margins (padding)
 
 ## Additional Capabilities of (with style preservation)
 
@@ -50,6 +51,9 @@ The important thing to note here is the `stylePreservations` key. Currently the 
   * `useStrictFontSize`: `true`|`false`
     * Text size is stored in docx xml at 2x it's value (ex: if set to size 16 in word, xml holds 32)
     * When this is set to true, the xml value is halved so size 16 in word --> `font-size: 16px`;
+  * `applyTableCellStyles`: `true`|`false` - at some point this may get broken out... but for now with css in the style attribute:
+    * Applies table level borders, margins (padding), & fill (background color) to the `<table>` element.
+    * Applies table level borders, margins (padding), & fill (background color) to any `<td>` elements.
 
 ---
 ---
