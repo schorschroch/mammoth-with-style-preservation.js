@@ -19,16 +19,19 @@ The overarching goal is to find ways to do so in robust, repeatable, and html-pr
 
 ## TODOS
 
+General
+* [ ] replace span wrapping & inline styles with CSS classes or some other more html friendly mechanism
+
 General Text
 * [x] text color
 * [x] font size
-* [ ] replace span wrapping with CSS classes or some other more html friendly mechanism
 
 Tables
 * [x] border width
 * [x] border color
 * [x] cell background color
 * [x] cell margins (padding)
+* [ ] add option for reducing table styles to one per cell (not top, left, bottom, right)
 
 ## Additional Capabilities of (with style preservation)
 
@@ -36,7 +39,7 @@ In order to maintain maximum flexibility, each addition of a style preservation 
 
 Example:
 ```
-mammoth.convertToHtml({arrayBuffer: arrayBuffer}, {stylePreservations: 'all'})
+mammoth.convertToHtml({arrayBuffer: arrayBuffer}, {stylePreservations: 'default'})
     .then(displayResult)
     .done();
 ```
