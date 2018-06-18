@@ -21,6 +21,7 @@ The overarching goal is to find ways to do so in robust, repeatable, and html-pr
 
 General
 * [ ] replace span wrapping & inline styles with CSS classes or some other more html friendly mechanism
+  * Probably useful to read [this thread](https://github.com/mwilliamson/mammoth.js/issues/57).
 
 General Text
 * [x] text color
@@ -31,7 +32,8 @@ Tables
 * [x] border color
 * [x] cell background color
 * [x] cell margins (padding)
-* [ ] add option for reducing table styles to one per cell (not top, left, bottom, right)
+* [x] add option for reducing table styles to one per cell (not top, left, bottom, right)
+* [ ] add option for reducing table styles to one per table (not cell specific)
 
 ## Additional Capabilities of (with style preservation)
 
@@ -49,14 +51,26 @@ The important thing to note here is the `stylePreservations` key. Currently the 
 * (string) `all` configuration for as many as possible style preservations
 * (string) `default` configuration for the most likely desired style preservations (this can be seen in [`lib/styles/preserver-utils.js`](./lib/styles/preserver-utils.js) file)
 * (object) with any of the following supported properties:
-  * `useColorSpans`: `true`|`false` - preserves the color of text by wrapping the text in a span element with inline styling
-  * `useFontSizeSpans`: `true`|`false` - preserves the font-size of text by wrapping the text in a span element with inline styling
-  * `useStrictFontSize`: `true`|`false`
+  * `useColorSpans`: `truthy`|`fasly` - preserves the color of text by wrapping the text in a span element with inline styling
+  * `useFontSizeSpans`: `truthy`|`fasly` - preserves the font-size of text by wrapping the text in a span element with inline styling
+  * `useStrictFontSize`: `truthy`|`fasly`
     * Text size is stored in docx xml at 2x it's value (ex: if set to size 16 in word, xml holds 32)
     * When this is set to true, the xml value is halved so size 16 in word --> `font-size: 16px`;
-  * `applyTableCellStyles`: `true`|`false` - at some point this may get broken out... but for now with css in the style attribute:
+  * `applyTableStyles`: `truthy`|`fasly` - at some point this may get broken out... but for now with css in the style attribute:
     * Applies table level borders, margins (padding), & fill (background color) to the `<table>` element.
     * Applies table level borders, margins (padding), & fill (background color) to any `<td>` elements.
+  * `reduceCellBorderStylesUsed`: `truthy`|`fasly`
+    * For **<td>** elements, rather than producing _border-top-width:_, _border-left-style:_, etc. reduce css attributes to a single _border-width:_, _border-style:_, etc.
+    * Chooses the most frequent among the first border (in cases of a tie, goes with first appearing)
+    * This does not line up perfectly with docx xml... but produces better html (...well it _might_, it's a matter of opinion I suppose)
+  * :warning: **TODO: implement!** `reduceTableBorderStylesUsed`: `truthy`|`fasly` :warning:
+    * For **`<table>`** elements, rather than producing _border-top-width:_, _border-left-style:_, etc. reduce css attributes to a single _border-width:_, _border-style:_, etc.
+    * Chooses the most frequent among the first border (in cases of a tie, goes with first appearing)
+    * This does not line up perfectly with docx xml... but produces better html (...well it _might_, it's a matter of opinion I suppose)
+  * `ignoreTableElementBorders`: `truthy`|`fasly`
+    * Prevents any border styles from appearing the the top level `<table>` element.
+    * Thus relying on each individual cell's (`<td>`) border styling.
+    * Might be useful in combination with _reduceCellBorderStylesUsed_, which _should_ cause each cell to have a full border.
 
 ---
 ---

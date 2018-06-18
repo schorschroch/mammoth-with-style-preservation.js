@@ -688,6 +688,10 @@ test('table has preserved border styles read from table properties', function() 
         assert.deepEqual(table.preservedStyles[preservedStyleKey].style, expected.borderStyle);
         assert.deepEqual(table.preservedStyles[preservedStyleKey].color, expected.borderColor);
     });
+
+    assert.deepEqual(table.preservedStyles.simplifiedBorder.width, expected.borderWidth);
+    assert.deepEqual(table.preservedStyles.simplifiedBorder.style, expected.borderStyle);
+    assert.deepEqual(table.preservedStyles.simplifiedBorder.color, expected.borderColor);
 });
 
 test('table cell has preserved styles read from properties (border & margin, but no fill)', function() {
@@ -726,12 +730,74 @@ test('table cell has preserved styles read from properties (border & margin, but
         assert.deepEqual(cell.preservedStyles[preservedStyleKey].color, expected.borderColor);
     });
 
+    assert.deepEqual(cell.preservedStyles.simplifiedBorder.width, expected.borderWidth);
+    assert.deepEqual(cell.preservedStyles.simplifiedBorder.style, expected.borderStyle);
+    assert.deepEqual(cell.preservedStyles.simplifiedBorder.color, expected.borderColor);
+
     assert.deepEqual(cell.preservedStyles.cellMarginTop, expected.verticalMarginWs);
     assert.deepEqual(cell.preservedStyles.cellMarginLeft, expected.horizontalMarginWs);
     assert.deepEqual(cell.preservedStyles.cellMarginBottom, expected.verticalMarginWs);
     assert.deepEqual(cell.preservedStyles.cellMarginRight, expected.horizontalMarginWs);
 
     assert.deepEqual(cell.preservedStyles.fill, null);  // 'auto' --> null
+});
+
+test('table cell has preserved (simplified) styles read from properties (unbalanced border styles)', function() {
+    var expected = {
+        mainBorderStyle: 'dashed',
+        lesserBorderStyle: 'solid',
+        mainBorderWidth: '42',
+        lesserBorderWidth: '24',
+        mainBorderColor: '424242',
+        lesserBorderColor: '212121',
+        otherLesserBorderColor: '696969',
+        verticalMarginWs: '100.0',
+        horizontalMarginWs: '200.0'
+    };
+
+    var topBorderXml = new XmlElement('w:top', {'w:sz': expected.mainBorderWidth, 'w:val': expected.lesserBorderStyle, 'w:color': expected.lesserBorderColor}, []);
+    var leftBorderXml = new XmlElement('w:left', {'w:sz': expected.mainBorderWidth, 'w:val': expected.mainBorderStyle, 'w:color': expected.mainBorderColor}, []);
+    var bottomBorderXml = new XmlElement('w:bottom', {'w:sz': expected.mainBorderWidth, 'w:val': expected.mainBorderStyle, 'w:color': expected.mainBorderColor}, []);
+    var rightBorderXml = new XmlElement('w:right', {'w:sz': expected.lesserBorderWidth, 'w:val': expected.mainBorderStyle, 'w:color': expected.otherLesserBorderColor}, []);
+    var bordersXml = new XmlElement('w:tcBorders', {}, [topBorderXml, leftBorderXml, bottomBorderXml, rightBorderXml]);
+
+    var fillXml = new XmlElement('w:shd', {'w:fill': 'auto', 'w:val': 'clear'}, []);
+
+    var propertiesXml = new XmlElement('w:tcPr', {}, [bordersXml, fillXml]);
+    var textXml = new XmlElement("w:p", {}, []);
+
+    var cellXml = new XmlElement('w:tc', {}, [propertiesXml, textXml]);
+
+    var cell = readXmlElementValue(cellXml, {});
+
+    // non simplified styles
+    assert.deepEqual(cell.preservedStyles.borderTop.width, expected.mainBorderWidth);
+    assert.deepEqual(cell.preservedStyles.borderTop.style, expected.lesserBorderStyle);
+    assert.deepEqual(cell.preservedStyles.borderTop.color, expected.lesserBorderColor);
+
+    assert.deepEqual(cell.preservedStyles.borderLeft.width, expected.mainBorderWidth);
+    assert.deepEqual(cell.preservedStyles.borderLeft.style, expected.mainBorderStyle);
+    assert.deepEqual(cell.preservedStyles.borderLeft.color, expected.mainBorderColor);
+
+    assert.deepEqual(cell.preservedStyles.borderBottom.width, expected.mainBorderWidth);
+    assert.deepEqual(cell.preservedStyles.borderBottom.style, expected.mainBorderStyle);
+    assert.deepEqual(cell.preservedStyles.borderBottom.color, expected.mainBorderColor);
+
+    assert.deepEqual(cell.preservedStyles.borderRight.width, expected.lesserBorderWidth);
+    assert.deepEqual(cell.preservedStyles.borderRight.style, expected.mainBorderStyle);
+    assert.deepEqual(cell.preservedStyles.borderRight.color, expected.otherLesserBorderColor);
+
+    assert.deepEqual(cell.preservedStyles.cellMarginTop, null);
+    assert.deepEqual(cell.preservedStyles.cellMarginLeft, null);
+    assert.deepEqual(cell.preservedStyles.cellMarginBottom, null);
+    assert.deepEqual(cell.preservedStyles.cellMarginRight, null);
+
+    assert.deepEqual(cell.preservedStyles.fill, null);  // 'auto' --> null
+
+    // simplified styles
+    assert.deepEqual(cell.preservedStyles.simplifiedBorder.width, expected.mainBorderWidth);
+    assert.deepEqual(cell.preservedStyles.simplifiedBorder.style, expected.mainBorderStyle);
+    assert.deepEqual(cell.preservedStyles.simplifiedBorder.color, expected.mainBorderColor);
 });
 
 test('table cell has preserved styles read from properties (fill, but no border or margin)', function() {
