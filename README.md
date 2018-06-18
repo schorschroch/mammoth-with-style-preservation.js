@@ -71,6 +71,7 @@ The important thing to note here is the `stylePreservations` key. Currently the 
     * Prevents any border styles from appearing the the top level `<table>` element.
     * Thus relying on each individual cell's (`<td>`) border styling.
     * Might be useful in combination with _reduceCellBorderStylesUsed_, which _should_ cause each cell to have a full border.
+    * NOTE: this does not exclude `w:insideH` & `w:insideV` (just what applies to only the generated `<table>` element: `w:top`, `w:left`, `w:bottom`, `w:right`).
 
 ---
 ---

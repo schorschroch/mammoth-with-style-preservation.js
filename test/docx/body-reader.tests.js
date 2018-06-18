@@ -673,7 +673,9 @@ test('table has preserved border styles read from table properties', function() 
     var leftBorderXml = new XmlElement('w:left', {'w:sz': expected.borderWidth, 'w:val': expected.borderStyle, 'w:color': expected.borderColor}, []);
     var bottomBorderXml = new XmlElement('w:bottom', {'w:sz': expected.borderWidth, 'w:val': expected.borderStyle, 'w:color': expected.borderColor}, []);
     var rightBorderXml = new XmlElement('w:right', {'w:sz': expected.borderWidth, 'w:val': expected.borderStyle, 'w:color': expected.borderColor}, []);
-    var bordersXml = new XmlElement('w:tblBorders', {}, [topBorderXml, leftBorderXml, bottomBorderXml, rightBorderXml]);
+    var insideHXml = new XmlElement('w:insideH', {'w:sz': expected.borderWidth, 'w:val': expected.borderStyle, 'w:color': expected.borderColor}, []);
+    var insideVXml = new XmlElement('w:insideV', {'w:sz': expected.borderWidth, 'w:val': expected.borderStyle, 'w:color': expected.borderColor}, []);
+    var bordersXml = new XmlElement('w:tblBorders', {}, [topBorderXml, leftBorderXml, bottomBorderXml, rightBorderXml, insideHXml, insideVXml]);
 
     var styleXml = new XmlElement('w:tblStyle', {'w:val': 'TableNormal'}, []);
     var propertiesXml = new XmlElement('w:tblPr', {}, [styleXml, bordersXml]);
@@ -683,7 +685,7 @@ test('table has preserved border styles read from table properties', function() 
 
     var table = readXmlElementValue(tableXml, {styles: styles});
 
-    _.each(['borderTop', 'borderLeft', 'borderBottom', 'borderRight'], function(preservedStyleKey) {
+    _.each(['borderTop', 'borderLeft', 'borderBottom', 'borderRight', 'horizontalEdges', 'verticalEdges'], function(preservedStyleKey) {
         assert.deepEqual(table.preservedStyles[preservedStyleKey].width, expected.borderWidth);
         assert.deepEqual(table.preservedStyles[preservedStyleKey].style, expected.borderStyle);
         assert.deepEqual(table.preservedStyles[preservedStyleKey].color, expected.borderColor);
@@ -728,6 +730,11 @@ test('table cell has preserved styles read from properties (border & margin, but
         assert.deepEqual(cell.preservedStyles[preservedStyleKey].width, expected.borderWidth);
         assert.deepEqual(cell.preservedStyles[preservedStyleKey].style, expected.borderStyle);
         assert.deepEqual(cell.preservedStyles[preservedStyleKey].color, expected.borderColor);
+    });
+
+    // `w:insideH` & `w:insideV`, where not specified this time
+    _.each(['horizontalEdges', 'verticalEdges'], function(preservedStyleKey) {
+        assert.deepEqual(cell.preservedStyles[preservedStyleKey], null);
     });
 
     assert.deepEqual(cell.preservedStyles.simplifiedBorder.width, expected.borderWidth);
