@@ -45,7 +45,7 @@
   "bin": {
     "mammoth": "bin/mammoth"
   },
-  "scripts": {
+  "scripts": {"start": "node bin\/mammoth --output-dir c:\\tmp c:\\tmp\\test.docx",
     "pretest": "eslint lib tests",
     "test": "mocha 'test/**/*.tests.js'",
     "prepublish": "make mammoth.browser.min.js"

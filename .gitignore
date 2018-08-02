@@ -4,3 +4,7 @@
 /static/jszip
 /mammoth.browser.js
 /mammoth.browser.min.js
+/nbproject/private/
+nbproject/project.properties
+package.json
+nbproject/project.xml
