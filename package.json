@@ -1,9 +1,9 @@
 {
   "name": "mammoth",
-  "version": "1.4.6",
-  "author": "matt@piratematt.com",
+  "version": "1.5.0",
+  "author": "schorsch_roch@hotmail.com / matt@piratematt.com",
   "mammoth.js author": "Michael Williamson <mike@zwobble.org>",
-  "description": "Convert Word documents from docx to simple HTML and Markdown. A fork of mammoth.js with some additional opinions about style preservation.",
+  "description": "Convert Word documents from docx to simple HTML and Markdown. A fork of mammoth.js with some additional opinions about style preservation, symbol conversion, omml2mathml integration.",
   "keywords": [
     "docx",
     "html",
@@ -25,7 +25,9 @@
     "argparse": "~1.0.3",
     "jszip": "~2.5.0",
     "xmlbuilder": "~2.6.4",
-    "path-is-absolute": "^1.0.0"
+    "path-is-absolute": "^1.0.0",
+    "xmldom": "~0.1.27",
+    "omml2mathml": "~1.3.0"
   },
   "devDependencies": {
     "mocha": "~2.2.5",

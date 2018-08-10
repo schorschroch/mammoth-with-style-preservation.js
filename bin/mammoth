@@ -34,5 +34,12 @@ parser.addArgument(["--style-map"], {
     help: "File containg a style map."
 });
 
+parser.addArgument(["--style-preservations"], {
+    type: "string",
+    defaultValue: "special",
+    choices: ["special", "default", "all"],
+    help: "Styls Preservations"
+});
+
 
 main(parser.parseArgs());
