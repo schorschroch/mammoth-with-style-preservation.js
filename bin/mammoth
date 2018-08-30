@@ -38,8 +38,15 @@ parser.addArgument(["--style-preservations"], {
     type: "string",
     defaultValue: "special",
     choices: ["special", "default", "all"],
-    help: "Styls Preservations"
+    help: "Styles Preservations"
 });
+
+parser.addArgument(["--omml2mathml"], {
+    defaultValue: "false",
+    choices: ["false", "true"],
+    help: "Convert OMML Formulas to MathML"
+});
+
 
 
 main(parser.parseArgs());
